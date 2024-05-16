@@ -1,4 +1,4 @@
-import { Button, Container, TextField } from "@mui/material";
+import { Button, Card, CardContent, Container, Link, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -24,6 +24,11 @@ function App() {
     setPage(page + 1);
   };
 
+  const handleSearch = () => {
+    setPage(0); // Reset page to 0 when performing a new search
+    fetchData(); // Fetch data when search button is clicked
+  };
+
   return (
     <Container maxWidth="md">
       <TextField
@@ -34,18 +39,26 @@ function App() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <Button sx={{ width: "20%", height: "5.5vh", backgroundColor: "#cfe8fc", marginLeft: "5%", color: "" }}>
+      <Button
+        sx={{ width: "20%", height: "5.5vh", backgroundColor: "#cfe8fc", marginLeft: "5%", color: "" }}
+        onClick={handleSearch} // Call handleSearch function when search button is clicked
+      >
         Search
       </Button>
 
       {data && (
         <div style={{ padding: "10px" }}>
           {data.hits.map((item) => (
-            <div key={item.objectID}>
-              <h2>{item.author}</h2>
-              <p>{item.story_text}</p>
-              <a href={item.url}>{item.title}</a>
-            </div>
+            <Card key={item.objectID} style={{ marginBottom: "10px" }}>
+              <CardContent>
+                <Typography variant="h6">{item.title}</Typography>
+                <Typography variant="subtitle1">{item.author}</Typography>
+                <Typography variant="body1">{item.story_text}</Typography>
+                <Link href={item.url} target="_blank" rel="noopener noreferrer">
+                  Read more
+                </Link>
+              </CardContent>
+            </Card>
           ))}
           <Button sx={{ width: "100%", marginTop: "4%" }} onClick={handleShowMore} variant="contained" color="primary">
             Show More
